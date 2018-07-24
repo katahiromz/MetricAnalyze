@@ -151,7 +151,7 @@ int main(void)
             continue;
         }
 
-        static const LONG aHeights[] = { 100, 1000, -1000 };
+        static const LONG aHeights[] = { 100, 1000, -100, -1000 };
 
         for (size_t i = 0; i < sizeof(aHeights) / sizeof(aHeights[0]); ++i)
         {
