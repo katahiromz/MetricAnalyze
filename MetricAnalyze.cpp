@@ -119,6 +119,7 @@ int main(void)
 
     const char *field_names[] =
     {
+        "Font Name",
         // LOGFONT
         "lfHeight",
         // TEXTMETRIC
@@ -171,6 +172,8 @@ int main(void)
                         std::to_string(tm.tmInternalLeading),
                         std::to_string(tm.tmExternalLeading),
                     };
+
+                    fprintf(fp, "%s\t", g_pairs[k].name);
 
                     str = mstr_join(an1, "\t");
                     fprintf(fp, "%s\t", str.c_str());
