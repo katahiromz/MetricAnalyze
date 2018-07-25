@@ -124,6 +124,8 @@ int main(void)
         "lfHeight",
         // TEXTMETRIC
         "tmHeight", "tmAscent", "tmDescent", "tmInternalLeading", "tmExternalLeading",
+        // FT_Face
+        "units_per_EM", "ascender", "descender", "height",
         // TT_OS2
         "version", "xAvgCharWidth", "sTypoAscender", "sTypoDescender", "sTypoLineGap", "usWinAscent", "usWinDescent", "sxHeight", "sCapHeight",
         // TT_HoriHeader
@@ -151,7 +153,7 @@ int main(void)
             continue;
         }
 
-        static const LONG aHeights[] = { 100, 1000, -100, -1000 };
+        static const LONG aHeights[] = { 100, 1000, 10000, -100, -1000, -10000 };
 
         for (size_t i = 0; i < sizeof(aHeights) / sizeof(aHeights[0]); ++i)
         {
@@ -171,6 +173,10 @@ int main(void)
                         std::to_string(tm.tmDescent),
                         std::to_string(tm.tmInternalLeading),
                         std::to_string(tm.tmExternalLeading),
+                        std::to_string(face->units_per_EM),
+                        std::to_string(face->ascender),
+                        std::to_string(face->descender),
+                        std::to_string(face->height),
                     };
 
                     fprintf(fp, "%s\t", g_pairs[k].name);
