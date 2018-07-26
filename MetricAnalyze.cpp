@@ -105,17 +105,27 @@ mstr_join(const T_STR_CONTAINER& container,
     return result;
 }
 
-int main(void)
+int do_it(int type)
 {
-    const char *text = "This is a sample text.";
-
     g_hDC = CreateCompatibleDC(NULL);
     FT_Init_FreeType(&g_library);
 
     INT nTotalScore = 0;
     TEXTMETRIC tm;
 
-    FILE *fp = fopen("MetricAnalyze.txt", "w");
+    FILE *fp;
+    switch (type)
+    {
+    case -1:
+        fp = fopen("MetricAnalyzeNegative.txt", "w");
+        break;
+    case 0:
+        fp = fopen("MetricAnalyze.txt", "w");
+        break;
+    case 1:
+        fp = fopen("MetricAnalyzePositive.txt", "w");
+        break;
+    }
 
     const char *field_names[] =
     {
@@ -141,6 +151,26 @@ int main(void)
     std::string str = mstr_join(fields, "\t");
     fprintf(fp, "%s\n", str.c_str());
 
+    std::vector<LONG> vec;
+    if (type <= 0)
+    {
+        for (LONG n = -1; n > -100; --n)
+            vec.push_back(n);
+        for (LONG n = -100; n > -1000; n -= 100)
+            vec.push_back(n);
+        for (LONG n = -1000; n >= -10000; n -= 1000)
+            vec.push_back(n);
+    }
+    if (type >= 0)
+    {
+        for (LONG n = 1; n < 100; ++n)
+            vec.push_back(n);
+        for (LONG n = 100; n < 1000; n += 100)
+            vec.push_back(n);
+        for (LONG n = 1000; n <= 10000; n += 1000)
+            vec.push_back(n);
+    }
+
     for (size_t k = 0; k < g_pair_count; ++k)
     {
         char szPath[MAX_PATH];
@@ -153,11 +183,9 @@ int main(void)
             continue;
         }
 
-        static const LONG aHeights[] = { 100, 1000, 10000, -100, -1000, -10000 };
-
-        for (size_t i = 0; i < sizeof(aHeights) / sizeof(aHeights[0]); ++i)
+        for (size_t i = 0; i < vec.size(); ++i)
         {
-            LONG lfHeight = aHeights[i];
+            LONG lfHeight = vec[i];
             if (TestWin(g_pairs[k].name, lfHeight, tm))
             {
                 if (FT_Face face = TestFT(szPath))
@@ -237,5 +265,13 @@ int main(void)
     DeleteDC(g_hDC);
     FT_Done_FreeType(g_library);
 
+    return 0;
+}
+
+int main(void)
+{
+    do_it(-1);
+    do_it(0);
+    do_it(1);
     return 0;
 }
